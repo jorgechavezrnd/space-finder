@@ -26,6 +26,11 @@ npm i -D typescript ts-node
 npm i -D @types/node
 ```
 
+## Debugging Lambda Functions
+
+- 🐛 [Debugging TypeScript with IntelliJ (JetBrains)](https://www.jetbrains.com/help/idea/running-and-debugging-typescript.html#ws_ts_run_debug_server_side)
+- 🐛 **VS Code**: The project includes a `launch.json` configuration (`Debug local file`) that allows debugging any TypeScript file directly using `ts-node`, with the `AWS_REGION` environment variable pre-configured. Since it uses `${relativeFile}`, make sure the file you want to debug is the **active file** in the editor before starting the debug session.
+
 ## Resources
 
 - 🎓 [Udemy Course](https://www.udemy.com/course/aws-typescript-cdk-serverless-react/?couponCode=MT260504G1)
