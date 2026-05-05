@@ -29,7 +29,16 @@ npm i -D @types/node
 ## Debugging Lambda Functions
 
 - 🐛 [Debugging TypeScript with IntelliJ (JetBrains)](https://www.jetbrains.com/help/idea/running-and-debugging-typescript.html#ws_ts_run_debug_server_side)
-- 🐛 **VS Code**: The project includes a `launch.json` configuration (`Debug local file`) that allows debugging any TypeScript file directly using `ts-node`, with the `AWS_REGION` environment variable pre-configured. Since it uses `${relativeFile}`, make sure the file you want to debug is the **active file** in the editor before starting the debug session.
+- 🐛 **VS Code**: The project includes a `launch.json` configuration (`Debug local file`) that allows debugging any TypeScript file directly using `ts-node`, with the `AWS_REGION` and `TABLE_NAME` environment variables pre-configured. Since it uses `${relativeFile}`, make sure the file you want to debug is the **active file** in the editor before starting the debug session.
+- 🐛 **Terminal**: Alternatively, you can debug/run a Lambda locally from the terminal using:
+  ```bash
+  npx ts-node test/launcher.ts
+  ```
+  For this to work, the environment variables must be defined directly in `test/launcher.ts`:
+  ```ts
+  process.env.AWS_REGION = 'us-east-1';
+  process.env.TABLE_NAME = 'SpaceTable-121b4872df75';
+  ```
 
 ## Resources
 
