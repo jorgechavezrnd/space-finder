@@ -40,6 +40,18 @@ npm i -D @types/node
   process.env.TABLE_NAME = 'SpaceTable-121b4872df75';
   ```
 
+## Recommended test order for spaces.http
+
+1. **Get all** - Verify the table is empty or has existing items
+2. **Post** - Create a new space and capture the returned `id`
+3. **Get one** - Verify the created space exists by `id`
+4. **Put** - Update a field of the created space
+5. **Get one** - Verify the update was applied correctly
+6. **Get all** - Verify the updated space appears in the full list
+7. **Delete** - Remove the created space by `id`
+8. **Get one** - Verify the space no longer exists
+9. **Get all** - Verify the table is back to its original state
+
 ## Resources
 
 - 🎓 [Udemy Course](https://www.udemy.com/course/aws-typescript-cdk-serverless-react/?couponCode=MT260504G1)
