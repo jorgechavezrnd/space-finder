@@ -71,6 +71,18 @@ npm i -D @types/node
 8. **Get one** - Verify the space no longer exists
 9. **Get all** - Verify the table is back to its original state
 
+## Cognito - Confirm a user manually
+
+When a user is created in Cognito, its confirmation status may be `FORCE_CHANGE_PASSWORD` or `UNCONFIRMED`. To set it to `Confirmed` without going through the email verification flow, use the following AWS CLI command:
+
+```bash
+aws cognito-idp admin-set-user-password \
+  --user-pool-id us-east-1_rgHoEDiOP \
+  --username barosuna \
+  --password "Barosuna@123#" \
+  --permanent
+```
+
 ## Resources
 
 - 🎓 [Udemy Course](https://www.udemy.com/course/aws-typescript-cdk-serverless-react/?couponCode=MT260504G1)
