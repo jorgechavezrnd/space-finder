@@ -59,6 +59,22 @@ npm i -D @types/node
    "runtimeArgs": ["--import", "tsx"]
    ```
 
+## Getting a token to test spaces.http
+
+The spaces endpoints are protected and require an authorization token. Before running any request in `spaces.http`, you must obtain a valid token by running:
+
+```bash
+npx tsx test/auth.test.ts
+```
+
+This will log in with the Cognito user (`barosuna`) and print the `idToken` in the terminal. Copy that token and paste it as the value of the `@token` variable at the top of `spaces.http`:
+
+```http
+@token = <paste your token here>
+```
+
+> ⚠️ Cognito tokens expire after 1 hour. If a request returns `401 Unauthorized`, run the command again to get a fresh token.
+
 ## Recommended test order for spaces.http
 
 1. **Get all** - Verify the table is empty or has existing items
