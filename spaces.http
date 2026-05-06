@@ -10,13 +10,13 @@ Content-Type: application/json
 }
 ###
 
-GET https://qu1zmf2c2l.execute-api.us-east-1.amazonaws.com/prod/spaces?id=798fb57f-c942-4bcb-be63-43782c68afc2
+GET https://qu1zmf2c2l.execute-api.us-east-1.amazonaws.com/prod/spaces?id=d3be28ed-4f87-4e3d-999b-bfa9141608e3
 ###
 
-DELETE https://qu1zmf2c2l.execute-api.us-east-1.amazonaws.com/prod/spaces?id=798fb57f-c942-4bcb-be63-43782c68afc2
+DELETE https://qu1zmf2c2l.execute-api.us-east-1.amazonaws.com/prod/spaces?id=d3be28ed-4f87-4e3d-999b-bfa9141608e3
 ###
 
-PUT https://qu1zmf2c2l.execute-api.us-east-1.amazonaws.com/prod/spaces?id=798fb57f-c942-4bcb-be63-43782c68afc2
+PUT https://qu1zmf2c2l.execute-api.us-east-1.amazonaws.com/prod/spaces?id=d3be28ed-4f87-4e3d-999b-bfa9141608e3
 Content-Type: application/json
 
 {
