@@ -9,15 +9,15 @@
       "request": "launch",
       "name": "Debug local file",
       "runtimeArgs": [
-        "-r",
-        "ts-node/register"
+        "--import",
+        "tsx"
       ],
       "args": [
         "${relativeFile}"
       ],
       "env": {
         "AWS_REGION": "us-east-1",
-        "TABLE_NAME": "SpaceTable-121b4872df75"
+        "TABLE_NAME": "SpaceTable-0eeeec61044d"
       }
     }
   ]

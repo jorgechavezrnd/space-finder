@@ -1,8 +1,10 @@
-GET https://qu1zmf2c2l.execute-api.us-east-1.amazonaws.com/prod/spaces
+@baseUrl = https://6np67n3288.execute-api.us-east-1.amazonaws.com/prod/
+
+GET {{baseUrl}}/spaces
 ###
 
 # @name postSpace
-POST https://qu1zmf2c2l.execute-api.us-east-1.amazonaws.com/prod/spaces
+POST {{baseUrl}}/spaces
 Content-Type: application/json
 
 {
@@ -13,13 +15,13 @@ Content-Type: application/json
 
 @spaceId = {{postSpace.response.body.id}}
 
-GET https://qu1zmf2c2l.execute-api.us-east-1.amazonaws.com/prod/spaces?id={{spaceId}}
+GET {{baseUrl}}/spaces?id={{spaceId}}
 ###
 
-DELETE https://qu1zmf2c2l.execute-api.us-east-1.amazonaws.com/prod/spaces?id={{spaceId}}
+DELETE {{baseUrl}}/spaces?id={{spaceId}}
 ###
 
-PUT https://qu1zmf2c2l.execute-api.us-east-1.amazonaws.com/prod/spaces?id={{spaceId}}
+PUT {{baseUrl}}/spaces?id={{spaceId}}
 Content-Type: application/json
 
 {
