@@ -17,8 +17,8 @@ This project is a CDK application built from scratch without using the `cdk init
 # Install AWS CDK and core libraries
 npm i -D aws-cdk aws-cdk-lib constructs
 
-# Install TypeScript and ts-node to run TypeScript files directly
-npm i -D typescript ts-node
+# Install TypeScript and tsx to run TypeScript files directly
+npm i -D typescript tsx
 
 # Install Node.js type definitions
 # Note: it is recommended to check your Node.js version and install the matching types
@@ -29,7 +29,7 @@ npm i -D @types/node
 ## Debugging Lambda Functions
 
 - 🐛 [Debugging TypeScript with IntelliJ (JetBrains)](https://www.jetbrains.com/help/idea/running-and-debugging-typescript.html#ws_ts_run_debug_server_side)
-- 🐛 **VS Code**: The project includes a `launch.json` configuration (`Debug local file`) that allows debugging any TypeScript file directly using `ts-node`, with the `AWS_REGION` and `TABLE_NAME` environment variables pre-configured. Since it uses `${relativeFile}`, make sure the file you want to debug is the **active file** in the editor before starting the debug session.
+- 🐛 **VS Code**: The project includes a `launch.json` configuration (`Debug local file`) that allows debugging any TypeScript file directly using `tsx`, with the `AWS_REGION` and `TABLE_NAME` environment variables pre-configured. Since it uses `${relativeFile}`, make sure the file you want to debug is the **active file** in the editor before starting the debug session.
 - 🐛 **Terminal**: Alternatively, you can debug/run a Lambda locally from the terminal using:
   ```bash
   npx tsx test/launcher.ts
@@ -39,6 +39,25 @@ npm i -D @types/node
   process.env.AWS_REGION = 'us-east-1';
   process.env.TABLE_NAME = 'SpaceTable-121b4872df75';
   ```
+
+## Migration from ts-node to tsx
+
+`ts-node` has not been actively maintained for over 2 years, so this project migrated to `tsx`, which is faster, simpler, and actively maintained.
+
+### Steps followed to migrate
+
+1. Uninstall `ts-node` and install `tsx`:
+   ```bash
+   npm uninstall ts-node && npm i -D tsx
+   ```
+2. Update `cdk.json` to use `tsx` instead of `ts-node`:
+   ```json
+   "app": "npx tsx src/infra/Launcher.ts"
+   ```
+3. Update `.vscode/launch.json` `runtimeArgs` to use `tsx`:
+   ```json
+   "runtimeArgs": ["--import", "tsx"]
+   ```
 
 ## Recommended test order for spaces.http
 
