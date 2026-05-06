@@ -11,3 +11,11 @@ Content-Type: application/json
 
 GET https://qu1zmf2c2l.execute-api.us-east-1.amazonaws.com/prod/spaces?id=343345
 ###
+
+PUT https://qu1zmf2c2l.execute-api.us-east-1.amazonaws.com/prod/spaces?id=343345
+Content-Type: application/json
+
+{
+  "location": "Paris2"
+}
+###
