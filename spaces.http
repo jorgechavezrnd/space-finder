@@ -8,3 +8,6 @@ Content-Type: application/json
   "location": "Paris"
 }
 ###
+
+GET https://qu1zmf2c2l.execute-api.us-east-1.amazonaws.com/prod/spaces?id=343345
+###
