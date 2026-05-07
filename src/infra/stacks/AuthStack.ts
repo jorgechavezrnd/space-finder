@@ -1,6 +1,6 @@
 import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib';
 import { CfnIdentityPool, CfnIdentityPoolRoleAttachment, CfnUserPoolGroup, UserPool, UserPoolClient } from 'aws-cdk-lib/aws-cognito';
-import { FederatedPrincipal, Role } from 'aws-cdk-lib/aws-iam';
+import { Effect, FederatedPrincipal, PolicyStatement, Role } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
 export class AuthStack extends Stack {
@@ -16,10 +16,10 @@ export class AuthStack extends Stack {
 
     this.createUserPool();
     this.createUserPoolClient();
-    this.createAdminsGroup();
     this.createIdentityPool();
     this.createRoles();
     this.attachRoles();
+    this.createAdminsGroup();
   }
 
   private createUserPool() {
@@ -55,7 +55,8 @@ export class AuthStack extends Stack {
   private createAdminsGroup() {
     new CfnUserPoolGroup(this, 'SpaceAdmins', {
       userPoolId: this.userPool.userPoolId,
-      groupName: 'admins'
+      groupName: 'admins',
+      roleArn: this.adminRole.roleArn
     });
   }
 
@@ -112,6 +113,14 @@ export class AuthStack extends Stack {
         'sts:AssumeRoleWithWebIdentity'
       )
     });
+
+    this.adminRole.addToPolicy(new PolicyStatement({
+      effect: Effect.ALLOW,
+      actions: [
+        's3:ListAllMyBuckets'
+      ],
+      resources: ['*']
+    }));
   }
 
   private attachRoles() {
