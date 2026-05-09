@@ -113,6 +113,16 @@ This generates an `outputs.json` file at the root of the project with the export
 npm run deploy
 ```
 
+## UI Deployment - Prerequisites
+
+For `UIDeploymentStack` to work correctly, the **space-finder-frontend** repository must be cloned at the same level as this project, and the `dist` folder must exist (i.e. the frontend must have been built first).
+
+Expected path: `../space-finder-frontend/dist`
+
+- 🖥️ [Frontend Repository](https://github.com/jorgechavezrnd/space-finder-frontend)
+
+> ⚠️ If the `dist` folder is not found, the stack will log a warning and skip the UI deployment without throwing an error.
+
 ## Resources
 
 - 🎓 [Udemy Course](https://www.udemy.com/course/aws-typescript-cdk-serverless-react/?couponCode=MT260504G1)
