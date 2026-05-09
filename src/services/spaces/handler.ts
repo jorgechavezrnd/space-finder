@@ -5,27 +5,36 @@ import { getSpaces } from './GetSpaces';
 import { updateSpace } from './UpdateSpace';
 import { deleteSpace } from './DeleteSpace';
 import { JsonError, MissingFieldError } from '../shared/Validator';
+import { addCorsHeader } from '../shared/Utils';
 
 const ddbClient = new DynamoDBClient({});
 
 async function handler(event: APIGatewayProxyEvent, context: Context): Promise<APIGatewayProxyResult> {
-  let message: string = '';
+  let response: APIGatewayProxyResult;
 
   try {
     switch (event.httpMethod) {
       case 'GET':
         const getResponse = await getSpaces(event, ddbClient);
-        return getResponse;
+        response = getResponse;
+        break;
       case 'POST':
         const postResponse = await postSpaces(event, ddbClient);
-        return postResponse;
+        response = postResponse;
+        break;
       case 'PUT':
         const putResponse = await updateSpace(event, ddbClient);
-        return putResponse;
+        response = putResponse;
+        break;
       case 'DELETE':
         const deleteResponse = await deleteSpace(event, ddbClient);
-        return deleteResponse;
+        response = deleteResponse;
+        break;
       default:
+        response = {
+          statusCode: 400,
+          body: JSON.stringify('Method not allowed')
+        };
         break;
     }
   } catch (error: any) {
@@ -47,11 +56,7 @@ async function handler(event: APIGatewayProxyEvent, context: Context): Promise<A
     };
   }
 
-  const response: APIGatewayProxyResult = {
-    statusCode: 200,
-    body: JSON.stringify(message)
-  };
-
+  addCorsHeader(response);
   return response;
 }
 
