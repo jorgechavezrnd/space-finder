@@ -99,6 +99,20 @@ aws cognito-idp admin-set-user-password \
   --permanent
 ```
 
+## Deploying and saving stack outputs to a file
+
+When deploying, CDK can save all stack output values (like User Pool IDs, API URLs, etc.) to a JSON file. This makes it easier to access them without having to look at the terminal or the AWS Console, and allows other applications (like a UI) to read them directly.
+
+```bash
+cdk deploy --all --outputs-file outputs.json
+```
+
+This generates an `outputs.json` file at the root of the project with the exported values of each stack. To simplify this command, a `deploy` script was added to `package.json`:
+
+```bash
+npm run deploy
+```
+
 ## Resources
 
 - 🎓 [Udemy Course](https://www.udemy.com/course/aws-typescript-cdk-serverless-react/?couponCode=MT260504G1)
