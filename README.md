@@ -113,6 +113,25 @@ This generates an `outputs.json` file at the root of the project with the export
 npm run deploy
 ```
 
+## S3 BucketAccessControl.PUBLIC_READ workaround
+
+Using `accessControl: BucketAccessControl.PUBLIC_READ` alone on an S3 bucket will cause the deployment to fail due to AWS's default "Block Public Access" settings. This is a known CDK issue (still present as of 2026). In this project, this applies to the `photosBucket` in `DataStack.ts`.
+
+The workaround is to explicitly disable all public access blocks alongside the ACL:
+
+```ts
+// accessControl: BucketAccessControl.PUBLIC_READ, // currently not working
+objectOwnership: ObjectOwnership.OBJECT_WRITER,
+blockPublicAccess: {
+  blockPublicAcls: false,
+  blockPublicPolicy: false,
+  ignorePublicAcls: false,
+  restrictPublicBuckets: false
+}
+```
+
+> ⚠️ Remember to add `ObjectOwnership` to your imports from `aws-cdk-lib/aws-s3`.
+
 ## UI Deployment - Prerequisites
 
 For `UIDeploymentStack` to work correctly, the **space-finder-frontend** repository must be cloned at the same level as this project, and the `dist` folder must exist (i.e. the frontend must have been built first).
