@@ -142,6 +142,20 @@ Expected path: `../space-finder-frontend/dist`
 
 > ⚠️ If the `dist` folder is not found, the stack will log a warning and skip the UI deployment without throwing an error.
 
+## Configure a Webhook in Slack
+
+This webhook is required for the monitor Lambda function to send notifications to Slack. A CloudWatch alarm should be configured to trigger the monitor Lambda, which will then use this webhook to post messages to your Slack channel.
+
+To set up a webhook in Slack for sending notifications, follow these steps:
+
+1. **Navigate to Slack Apps**: Go to [api.slack.com/apps](https://api.slack.com/apps) and log in.
+2. **Create an App**: Click **Create New App** and select **"From scratch"**.
+3. **Name the App**: Name your app and select the workspace where you want the webhook.
+4. **Enable Webhooks**: Click **Incoming Webhooks** in the features section and toggle **Activate Incoming Webhooks** to **"On"**.
+5. **Add to Channel**: Click **Add New Webhook to Workspace** at the bottom of the page.
+6. **Select Channel**: Choose the channel for the bot to post to, then click **Authorize**.
+7. **Copy URL**: Copy the URL listed under **"Webhook URLs for Your Workspace"**. This URL is used to send messages to your Slack channel and should be configured in `monitor/handler.ts`.
+
 ## Resources
 
 - 🎓 [Udemy Course](https://www.udemy.com/course/aws-typescript-cdk-serverless-react/?couponCode=MT260504G1)
