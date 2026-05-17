@@ -156,6 +156,16 @@ To set up a webhook in Slack for sending notifications, follow these steps:
 6. **Select Channel**: Choose the channel for the bot to post to, then click **Authorize**.
 7. **Copy URL**: Copy the URL listed under **"Webhook URLs for Your Workspace"**. This URL is used to send messages to your Slack channel and should be configured in `monitor/handler.ts`.
 
+## Viewing CloudWatch Alarms
+
+To view the structure of the alarms configured in your AWS account, you can use the following AWS CLI command:
+
+```bash
+aws cloudwatch describe-alarms
+```
+
+This command will return a detailed JSON structure of all the alarms in your account, including their configurations and current states.
+
 ## Resources
 
 - 🎓 [Udemy Course](https://www.udemy.com/course/aws-typescript-cdk-serverless-react/?couponCode=MT260504G1)

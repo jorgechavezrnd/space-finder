@@ -4,6 +4,7 @@ import { LambdaStack } from './stacks/LambdaStack';
 import { ApiStack } from './stacks/ApiStack';
 import { AuthStack } from './stacks/AuthStack';
 import { UIDeploymentStack } from './stacks/UIDeploymentStack';
+import { MonitorStack } from './stacks/MonitorStack';
 
 const app = new App();
 const dataStack = new DataStack(app, 'DataStack');
@@ -18,3 +19,4 @@ new ApiStack(app, 'ApiStack', {
   userPool: authStack.userPool
 });
 new UIDeploymentStack(app, 'UIDeploymentStack');
+new MonitorStack(app, 'MonitorStack');
