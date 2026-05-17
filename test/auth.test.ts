@@ -8,10 +8,10 @@ async function testAuth() {
     'Barosuna@123#'
   );
   const idToken = await service.getIdToken();
-  // console.log(idToken);
-  const credentials = await service.generateTemporaryCredentials();
-  const buckets = await listBuckets(credentials);
-  console.log(buckets);
+  console.log(idToken);
+  // const credentials = await service.generateTemporaryCredentials();
+  // const buckets = await listBuckets(credentials);
+  // console.log(buckets);
 }
 
 async function listBuckets(credentials: any) {
