@@ -198,9 +198,9 @@ This tells TypeScript to load Jest's type definitions globally, making functions
 
 ### Jest Configuration
 
-A `jest.config.js` file has been created at the root of the project with the following configuration:
+A `jest.config.ts` file has been created at the root of the project with the following configuration:
 
-```javascript
+```typescript
 const config = {
   preset: 'ts-jest',
   testEnvironment: 'node',
@@ -209,7 +209,7 @@ const config = {
   ]
 };
 
-module.exports = config;
+export default config;
 ```
 
 - **preset: 'ts-jest'**: Enables Jest to transpile TypeScript files
@@ -231,7 +231,7 @@ Jest needs to transpile TypeScript test files, but since we're using `tsx` inste
 1. **Jest's default TypeScript handling** relies on `ts-node` or similar tools
 2. **We're using `tsx`** instead because it's faster and actively maintained (ts-node hasn't been updated in years)
 3. **`--import tsx`** registers `tsx` as an ESM loader for the Node process, allowing it to transpile TypeScript on-the-fly when Jest runs
-4. The `jest.config.js` uses the `ts-jest` preset, which works in combination with the tsx loader
+4. The `jest.config.ts` uses the `ts-jest` preset, which works in combination with the tsx loader
 
 ## Testing CDK Stacks
 
@@ -395,6 +395,22 @@ test('SNS topic stack snapshot', () => {
 - First run creates a snapshot file; subsequent runs compare against it
 
 **Note**: After making intentional changes to your stack, update snapshots by running `npm test -- -u`.
+
+### Running Different Test Suites
+
+The Jest configuration uses a `baseTestDir` variable to determine which tests to run. Update this in `jest.config.ts` to test different parts of your application:
+
+**For Infrastructure Tests (CDK Stacks):**
+```typescript
+const baseTestDir = '<rootDir>/test/infra';
+```
+
+**For Service Tests (Lambda Functions):**
+```typescript
+const baseTestDir = '<rootDir>/test/services';
+```
+
+After changing `baseTestDir`, run `npm test` to execute the appropriate test suite.
 
 ## Resources
 

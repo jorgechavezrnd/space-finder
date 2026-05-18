@@ -1,6 +1,6 @@
 import { Config } from 'jest';
 
-const baseTestDir = '<rootDir>/test/infra';
+const baseTestDir = '<rootDir>/test/services';
 
 const config: Config = {
   preset: 'ts-jest',
