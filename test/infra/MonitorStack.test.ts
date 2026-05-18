@@ -78,4 +78,18 @@ describe('Initial test suite', () => {
     }]);
   });
 
+  test('Monitor stack snapshot', () => {
+    expect(monitorStackTemplate.toJSON()).toMatchSnapshot();
+  });
+
+  test('Lambda stack snapshot', () => {
+    const lambda = monitorStackTemplate.findResources('AWS::Lambda::Function');
+    expect(lambda).toMatchSnapshot();
+  });
+
+  test('Lambda stack snapshot', () => {
+    const snsTopic = monitorStackTemplate.findResources('AWS::SNS::Topic');
+    expect(snsTopic).toMatchSnapshot();
+  });
+
 });

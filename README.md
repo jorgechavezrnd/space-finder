@@ -368,6 +368,34 @@ test('Alarm actions', () => {
 
 This approach uses Jest's `expect.stringMatching()` to perform regex pattern matching on the captured values, providing more sophisticated validation than the previous approaches.
 
+#### Approach 4: Using Snapshots
+
+Jest snapshots capture the entire structure of resources and compare them against future test runs. This is useful for regression testing and documenting expected CloudFormation templates:
+
+```typescript
+test('Monitor stack snapshot', () => {
+  expect(monitorStackTemplate.toJSON()).toMatchSnapshot();
+});
+
+test('Lambda stack snapshot', () => {
+  const lambda = monitorStackTemplate.findResources('AWS::Lambda::Function');
+  expect(lambda).toMatchSnapshot();
+});
+
+test('SNS topic stack snapshot', () => {
+  const snsTopic = monitorStackTemplate.findResources('AWS::SNS::Topic');
+  expect(snsTopic).toMatchSnapshot();
+});
+```
+
+**Benefits**: 
+- Captures the full structure of templates or resources for regression testing
+- Documents expected outputs of your CDK code
+- Easily detects unintended changes to resource definitions
+- First run creates a snapshot file; subsequent runs compare against it
+
+**Note**: After making intentional changes to your stack, update snapshots by running `npm test -- -u`.
+
 ## Resources
 
 - 🎓 [Udemy Course](https://www.udemy.com/course/aws-typescript-cdk-serverless-react/?couponCode=MT260504G1)
