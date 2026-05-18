@@ -233,6 +233,61 @@ Jest needs to transpile TypeScript test files, but since we're using `tsx` inste
 3. **`--import tsx`** registers `tsx` as an ESM loader for the Node process, allowing it to transpile TypeScript on-the-fly when Jest runs
 4. The `jest.config.js` uses the `ts-jest` preset, which works in combination with the tsx loader
 
+## Testing CDK Stacks
+
+This project uses a setup-act-assert pattern for testing CDK stacks using AWS CDK's built-in testing utilities.
+
+### Testing Strategy
+
+CDK stack tests follow a three-part structure:
+
+1. **Setup**: Prepare the template by creating an App instance, instantiating the stack, and converting it to a Template for assertions
+2. **Act**: Query the template for specific constructs and their properties
+3. **Assert**: Verify that the constructs have the expected properties and configurations
+
+### Example: MonitorStack Test
+
+The `test/infra/MonitorStack.test.ts` file demonstrates this pattern:
+
+```typescript
+import { App } from 'aws-cdk-lib';
+import { MonitorStack } from '../../src/infra/stacks/MonitorStack';
+import { Template } from 'aws-cdk-lib/assertions';
+
+describe('Initial test suite', () => {
+
+  let monitorStackTemplate: Template;
+
+  beforeAll(() => {
+    // Setup: Create the template
+    const testApp = new App({
+      outdir: 'cdk.out'
+    });
+    const monitorStack = new MonitorStack(testApp, 'MonitorStack');
+    monitorStackTemplate = Template.fromStack(monitorStack);
+  });
+
+  test('Lambda properties', () => {
+    // Act & Assert: Query and verify Lambda function properties
+    monitorStackTemplate.hasResourceProperties('AWS::Lambda::Function', {
+      Handler: 'index.handler',
+      Runtime: 'nodejs24.x'
+    });
+  });
+
+  test('Sns topic properties', () => {
+    // Act & Assert: Query and verify SNS topic properties
+    monitorStackTemplate.hasResourceProperties('AWS::SNS::Topic', {
+      DisplayName: 'AlarmTopic',
+      TopicName: 'AlarmTopic'
+    });
+  });
+
+});
+```
+
+This approach ensures that CDK stacks are generating the correct AWS resources with the expected configurations.
+
 ## Resources
 
 - 🎓 [Udemy Course](https://www.udemy.com/course/aws-typescript-cdk-serverless-react/?couponCode=MT260504G1)
