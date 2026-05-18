@@ -548,6 +548,51 @@ expect(getItemCommandInput.Key).toEqual({
 - `mock.calls` allows inspecting the exact arguments passed to the mock
 - Test different scenarios: missing parameters, not found, success cases, etc.
 
+### Mocking Entire Modules
+
+For more complex dependencies, you can mock entire modules using `jest.mock()`. The `test/services/spaces/handler.test.ts` demonstrates this approach:
+
+```typescript
+jest.mock('@aws-sdk/client-dynamodb', () => {
+  return {
+    DynamoDBClient: jest.fn().mockImplementation(() => {
+      return {
+        send: jest.fn().mockImplementation(() => {
+          return {
+            Items: someItems
+          }
+        })
+      }
+    }),
+    ScanCommand: jest.fn()
+  }
+});
+
+describe('Spaces handler test suite', () => {
+  test('Returns spaces from dynamoDb', async () => {
+    const result = await handler({
+      httpMethod: 'GET'
+    } as any, {} as any);
+
+    expect(result.statusCode).toBe(200);
+    expect(DynamoDBClient).toHaveBeenCalledTimes(1);
+    expect(ScanCommand).toHaveBeenCalledTimes(1);
+  });
+});
+```
+
+**How It Works:**
+- `jest.mock()` replaces the entire module before tests run
+- Returns an object with mocked exports (DynamoDBClient, ScanCommand)
+- Each mock is configured with its own behavior via `mockImplementation()`
+- When the handler code imports and uses these classes, it gets the mocks instead
+
+**Benefits:**
+- Tests don't need actual AWS credentials or database connections
+- Complete control over what each function returns
+- Easy to verify that the correct classes and methods were called
+- Simpler than manually creating mock objects for each test
+
 ## Resources
 
 - 🎓 [Udemy Course](https://www.udemy.com/course/aws-typescript-cdk-serverless-react/?couponCode=MT260504G1)
