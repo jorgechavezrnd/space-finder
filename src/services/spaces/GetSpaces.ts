@@ -26,7 +26,7 @@ export async function getSpaces(event: APIGatewayProxyEvent, ddbClient: DynamoDB
       }
     } else {
       return {
-        statusCode: 401,
+        statusCode: 400,
         body: JSON.stringify('Id required!')
       };
     }

@@ -168,6 +168,43 @@ aws cloudwatch describe-alarms
 
 This command will return a detailed JSON structure of all the alarms in your account, including their configurations and current states.
 
+## Monitoring with AWS X-Ray
+
+This project integrates **AWS X-Ray** for distributed tracing and performance monitoring using the `aws-xray-sdk-core` package.
+
+### Instrumenting AWS Clients
+
+The `aws-xray-sdk-core` package provides the `captureAWSv3Client` function to automatically instrument AWS SDK clients. In `src/services/spaces/handler.ts`, the DynamoDB client is wrapped:
+
+```typescript
+import { captureAWSv3Client, getSegment } from 'aws-xray-sdk-core';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+
+const ddbClient = captureAWSv3Client(new DynamoDBClient({}));
+```
+
+This instrumentation automatically traces all DynamoDB operations, recording latency, errors, and other metadata.
+
+### Creating Custom Subsegments
+
+The `getSegment()` function retrieves the current X-Ray segment, allowing you to create subsegments for tracking specific operations:
+
+```typescript
+const subSeg = getSegment()?.addNewSubsegment('MyLongCall');
+await new Promise(resolve => { setTimeout(resolve, 3000) });
+subSeg?.close();
+
+const subSeg2 = getSegment()?.addNewSubsegment('MyShortCall');
+await new Promise(resolve => { setTimeout(resolve, 500) });
+subSeg2?.close();
+```
+
+**Benefits:**
+- Trace individual operations within your Lambda functions
+- Monitor performance bottlenecks
+- Visualize service dependencies in the X-Ray console
+- Correlate traces with CloudWatch logs and alarms
+
 ## Testing with Jest
 
 This project uses **Jest** for unit testing TypeScript code. Since we're using `tsx` as our TypeScript runtime (instead of `ts-node`), the Jest setup requires a specific configuration.
@@ -477,6 +514,39 @@ describe('Monitor lambda tests', () => {
 - **Reliability**: Tests don't fail due to network issues or external service unavailability
 - **Isolation**: Tests focus on your code logic, not external dependencies
 - **Control**: You can simulate different responses and error scenarios
+
+### Mocking AWS Service Clients
+
+AWS provides the [`aws-sdk-client-mock`](https://aws.amazon.com/blogs/developer/mocking-modular-aws-sdk-for-javascript-v3-in-unit-tests/) package for mocking AWS SDK clients in tests. However, this project uses a simpler manual mocking approach with Jest's `jest.fn()` for more control and flexibility.
+
+The `test/services/spaces/GetSpaces.test.ts` demonstrates how to mock AWS SDK clients for testing database operations:
+
+```typescript
+const ddbClientMock = {
+  send: jest.fn()
+};
+
+// Setup: Mock return values for different test scenarios
+ddbClientMock.send.mockResolvedValueOnce(someItems);
+
+// Test the function
+const getResult = await getSpaces({} as any, ddbClientMock as any);
+
+// Assert: Verify the mock was called correctly
+expect(ddbClientMock.send).toHaveBeenCalledWith(expect.any(GetItemCommand));
+const getItemCommandInput = (ddbClientMock.send.mock.calls[0][0] as GetItemCommand).input;
+expect(getItemCommandInput.Key).toEqual({
+  id: {
+    S: '123'
+  }
+});
+```
+
+**Key Points:**
+- `jest.fn()` creates a mock function for the `send` method
+- `mockResolvedValueOnce()` sets up return values for each test call
+- `mock.calls` allows inspecting the exact arguments passed to the mock
+- Test different scenarios: missing parameters, not found, success cases, etc.
 
 ## Resources
 
