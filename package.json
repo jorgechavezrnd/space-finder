@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node --import tsx node_modules/.bin/jest",
+    "test-services": "node --import tsx node_modules/.bin/jest --config jest.services.config.ts",
+    "test-infra": "node --import tsx node_modules/.bin/jest --config jest.infra.config.ts",
+    "test": "npm run test-services && npm run test-infra",
     "deploy": "cdk deploy --all --outputs-file outputs.json"
   },
   "keywords": [],

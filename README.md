@@ -431,7 +431,21 @@ test('SNS topic stack snapshot', () => {
 - Easily detects unintended changes to resource definitions
 - First run creates a snapshot file; subsequent runs compare against it
 
-**Note**: After making intentional changes to your stack, update snapshots by running `npm test -- -u`.
+**Note**: Snapshot tests can be temporarily disabled using `test.skip()`. To re-enable them, simply remove the `.skip` from the test name. In this project, snapshot tests in various test files can be managed this way—just remove `.skip` to run them again:
+
+```typescript
+// To skip a snapshot test:
+test.skip('Monitor stack snapshot', () => {
+  expect(monitorStackTemplate.toJSON()).toMatchSnapshot();
+});
+
+// To re-enable it, remove .skip:
+test('Monitor stack snapshot', () => {
+  expect(monitorStackTemplate.toJSON()).toMatchSnapshot();
+});
+```
+
+**Important**: After making intentional changes to your stack, update snapshots by running `npm test -- -u`.
 
 ### Running Different Test Suites
 
@@ -620,7 +634,7 @@ VS Code includes a debug configuration for running and debugging Jest tests dire
     "--runTestsByPath",
     "${relativeFile}",
     "--config",
-    "jest.config.ts"
+    "jest.services.config.ts"
   ],
   "console": "integratedTerminal",
   "internalConsoleOptions": "neverOpen"
@@ -633,8 +647,23 @@ VS Code includes a debug configuration for running and debugging Jest tests dire
 - **args**: 
   - `--runTestsByPath` - Runs only the specified test file
   - `${relativeFile}` - Uses the currently active file
-  - `--config jest.config.ts` - Specifies the Jest configuration file
+  - `--config jest.services.config.ts` - Specifies the Jest configuration file
 - **console**: `integratedTerminal` - Shows output in VS Code's integrated terminal
+
+### Switching Between Configuration Files
+
+Since this project uses multiple Jest configurations for different test suites:
+- **Services tests**: Use `jest.services.config.ts`
+- **Infrastructure tests**: Use `jest.infra.config.ts`
+
+**If you're debugging infrastructure tests** (e.g., `test/infra/MonitorStack.test.ts`), update the `--config` argument in the launch.json:
+
+```json
+"--config",
+"jest.infra.config.ts"
+```
+
+After making this change, you can debug infrastructure tests. To switch back to services tests, change it back to `jest.services.config.ts`.
 
 With breakpoints set in your test or source files, you can step through the code and inspect variables during execution.
 

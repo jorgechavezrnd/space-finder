@@ -33,7 +33,7 @@
         "--runTestsByPath",
         "${relativeFile}",
         "--config",
-        "jest.config.ts"
+        "jest.services.config.ts"
       ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
