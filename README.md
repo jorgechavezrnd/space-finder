@@ -247,7 +247,7 @@ CDK stack tests follow a three-part structure:
 
 ### Example: MonitorStack Test
 
-The `test/infra/MonitorStack.test.ts` file demonstrates this pattern:
+The `test/infra/MonitorStack.test.ts` file demonstrates this pattern. Here are the basic tests:
 
 ```typescript
 import { App } from 'aws-cdk-lib';
@@ -286,7 +286,65 @@ describe('Initial test suite', () => {
 });
 ```
 
-This approach ensures that CDK stacks are generating the correct AWS resources with the expected configurations.
+### Two Approaches for Testing Resource Properties
+
+When testing more complex resource relationships, you have two options:
+
+#### Approach 1: Using Matchers
+
+Using `Match` helpers to validate properties with flexible matching patterns:
+
+```typescript
+test('Sns subscription properties - with matchers', () => {
+  monitorStackTemplate.hasResourceProperties('AWS::SNS::Subscription',
+    Match.objectEquals({
+      Protocol: 'lambda',
+      TopicArn: {
+        Ref: Match.stringLikeRegexp('AlarmTopic')
+      },
+      Endpoint: {
+        'Fn::GetAtt': [
+          Match.stringLikeRegexp('webHookLambda'),
+          'Arn'
+        ]
+      }
+    })
+  );
+});
+```
+
+**Benefits**: Flexible pattern matching without needing to know exact resource names. Great for initial tests.
+
+#### Approach 2: Using Exact Values
+
+Using `findResources` to locate specific resources and then assert with their exact references:
+
+```typescript
+test('Sns subscription properties - with exact values', () => {
+  const snsTopic = monitorStackTemplate.findResources('AWS::SNS::Topic');
+  const snsTopicName = Object.keys(snsTopic)[0];
+
+  const lambda = monitorStackTemplate.findResources('AWS::Lambda::Function');
+  const lambdaName = Object.keys(lambda)[0];
+
+  monitorStackTemplate.hasResourceProperties('AWS::SNS::Subscription', {
+      Protocol: 'lambda',
+      TopicArn: {
+        Ref: snsTopicName
+      },
+      Endpoint: {
+        'Fn::GetAtt': [
+          lambdaName,
+          'Arn'
+        ]
+      }
+  });
+});
+```
+
+**Benefits**: Precise assertions with exact resource references. Ensures resources are correctly connected and linked.
+
+Both approaches are useful: use matchers for quick validation, and use exact values for strict verification of resource relationships.
 
 ## Resources
 
