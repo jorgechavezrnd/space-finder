@@ -412,6 +412,72 @@ const baseTestDir = '<rootDir>/test/services';
 
 After changing `baseTestDir`, run `npm test` to execute the appropriate test suite.
 
+## Testing Lambda Functions
+
+When testing Lambda functions that make external API calls (like HTTP requests), **mocking** is essential to avoid making real network calls during tests. This project uses Jest **spies** to mock external dependencies.
+
+### Mocking with Jest Spies
+
+The `test/services/handler.test.ts` demonstrates how to mock the global `fetch` function:
+
+```typescript
+import { handler } from '../../src/services/monitor/handler';
+
+describe('Monitor lambda tests', () => {
+
+  const fetchSpy = jest.spyOn(global, 'fetch');
+  fetchSpy.mockImplementation(() => Promise.resolve({} as any));
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('makes requests for records in SnsEvents', async () => {
+    await handler({
+      Records: [{
+        Sns: {
+          Message: 'Test message'
+        }
+      }]
+    } as any, {});
+
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(fetchSpy).toHaveBeenCalledWith(expect.any(String), {
+      method: 'POST',
+      body: JSON.stringify({
+        'text': 'Huston, we have a problem: Test message'
+      })
+    });
+  });
+
+  test('No sns records, no requests', async () => {
+    await handler({
+      Records: []
+    } as any, {});
+
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+});
+```
+
+### How Mocking Works
+
+1. **Creating a Spy**: `jest.spyOn(global, 'fetch')` creates a spy on the global `fetch` function
+2. **Mocking the Implementation**: `mockImplementation()` replaces the real fetch with a mock that returns a resolved Promise
+3. **Clearing Between Tests**: `jest.clearAllMocks()` in `afterEach` resets the mock state after each test
+4. **Asserting Calls**: 
+   - `toHaveBeenCalledTimes(1)` - verifies fetch was called exactly once
+   - `toHaveBeenCalledWith()` - verifies fetch was called with the correct arguments
+   - `not.toHaveBeenCalled()` - verifies fetch was never called
+
+### Why Mock External Calls
+
+- **Speed**: Tests run faster without network requests
+- **Reliability**: Tests don't fail due to network issues or external service unavailability
+- **Isolation**: Tests focus on your code logic, not external dependencies
+- **Control**: You can simulate different responses and error scenarios
+
 ## Resources
 
 - 🎓 [Udemy Course](https://www.udemy.com/course/aws-typescript-cdk-serverless-react/?couponCode=MT260504G1)
