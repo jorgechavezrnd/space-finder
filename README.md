@@ -346,6 +346,28 @@ test('Sns subscription properties - with exact values', () => {
 
 Both approaches are useful: use matchers for quick validation, and use exact values for strict verification of resource relationships.
 
+#### Approach 3: Using Capture for Complex Assertions
+
+The `Capture` object allows you to extract values from resources and perform advanced assertions on them using Jest's `expect` matchers (like `expect.stringMatching`):
+
+```typescript
+test('Alarm actions', () => {
+  const alarmActionsCapture = new Capture();
+
+  monitorStackTemplate.hasResourceProperties('AWS::CloudWatch::Alarm', {
+    AlarmActions: alarmActionsCapture
+  });
+
+  expect(alarmActionsCapture.asArray()).toEqual([{
+    Ref: expect.stringMatching(/^AlarmTopic/)
+  }]);
+});
+```
+
+**Benefits**: Combines CDK template assertions with Jest's powerful `expect` matchers. Useful for validating complex properties, array contents, and regex patterns.
+
+This approach uses Jest's `expect.stringMatching()` to perform regex pattern matching on the captured values, providing more sophisticated validation than the previous approaches.
+
 ## Resources
 
 - 🎓 [Udemy Course](https://www.udemy.com/course/aws-typescript-cdk-serverless-react/?couponCode=MT260504G1)
