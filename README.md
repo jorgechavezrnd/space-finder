@@ -168,6 +168,71 @@ aws cloudwatch describe-alarms
 
 This command will return a detailed JSON structure of all the alarms in your account, including their configurations and current states.
 
+## Testing with Jest
+
+This project uses **Jest** for unit testing TypeScript code. Since we're using `tsx` as our TypeScript runtime (instead of `ts-node`), the Jest setup requires a specific configuration.
+
+### Installation
+
+```bash
+npm i -D jest @types/jest ts-jest
+```
+
+- **jest**: The testing framework
+- **@types/jest**: TypeScript type definitions for Jest globals (`describe`, `it`, `expect`, etc.)
+- **ts-jest**: Preset that enables Jest to understand and transpile TypeScript files
+
+### TypeScript Configuration
+
+Add `"jest"` to the `types` field in `tsconfig.json`:
+
+```json
+{
+  "compilerOptions": {
+    "types": ["node", "jest"]
+  }
+}
+```
+
+This tells TypeScript to load Jest's type definitions globally, making functions like `describe`, `it`, `expect`, etc. available in all your test files without needing to import them.
+
+### Jest Configuration
+
+A `jest.config.js` file has been created at the root of the project with the following configuration:
+
+```javascript
+const config = {
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  testMatch: [
+    '<rootDir>/test/infra/**/*test.ts'
+  ]
+};
+
+module.exports = config;
+```
+
+- **preset: 'ts-jest'**: Enables Jest to transpile TypeScript files
+- **testEnvironment: 'node'**: Configures Jest to run tests in a Node.js environment
+- **testMatch**: Specifies the pattern for test files (`test/infra/**/*test.ts`)
+
+### Test Script
+
+The `package.json` includes a test script:
+
+```json
+"test": "node --import tsx node_modules/.bin/jest"
+```
+
+### Why We Need `node --import tsx`
+
+Jest needs to transpile TypeScript test files, but since we're using `tsx` instead of `ts-node`, we must explicitly import `tsx` as a Node.js loader via the `--import` flag. Here's why:
+
+1. **Jest's default TypeScript handling** relies on `ts-node` or similar tools
+2. **We're using `tsx`** instead because it's faster and actively maintained (ts-node hasn't been updated in years)
+3. **`--import tsx`** registers `tsx` as an ESM loader for the Node process, allowing it to transpile TypeScript on-the-fly when Jest runs
+4. The `jest.config.js` uses the `ts-jest` preset, which works in combination with the tsx loader
+
 ## Resources
 
 - 🎓 [Udemy Course](https://www.udemy.com/course/aws-typescript-cdk-serverless-react/?couponCode=MT260504G1)

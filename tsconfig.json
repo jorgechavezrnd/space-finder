@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es2022",
-    "types": ["node"],
+    "types": ["node", "jest"],
     "strictPropertyInitialization": false
   },
   "exclude": [
