@@ -593,6 +593,51 @@ describe('Spaces handler test suite', () => {
 - Easy to verify that the correct classes and methods were called
 - Simpler than manually creating mock objects for each test
 
+## Debugging Jest Tests
+
+VS Code includes a debug configuration for running and debugging Jest tests directly. The `Jest Current File` configuration in `.vscode/launch.json` allows you to debug the currently active test file.
+
+### Using Jest Current File Debug Configuration
+
+1. Open a test file (e.g., `test/services/spaces/handler.test.ts`)
+2. Make it the active file in VS Code
+3. Press **F5** or go to **Run** → **Start Debugging**
+4. Select **Jest Current File** from the dropdown
+
+### How It Works
+
+```json
+{
+  "type": "node",
+  "request": "launch",
+  "name": "Jest Current File",
+  "runtimeArgs": [
+    "--import",
+    "tsx"
+  ],
+  "program": "${workspaceFolder}/node_modules/.bin/jest",
+  "args": [
+    "--runTestsByPath",
+    "${relativeFile}",
+    "--config",
+    "jest.config.ts"
+  ],
+  "console": "integratedTerminal",
+  "internalConsoleOptions": "neverOpen"
+}
+```
+
+**Key Configuration Elements:**
+- **runtimeArgs**: `["--import", "tsx"]` - Loads `tsx` as a Node.js loader, allowing TypeScript files to be transpiled on-the-fly
+- **program**: Points to the Jest executable
+- **args**: 
+  - `--runTestsByPath` - Runs only the specified test file
+  - `${relativeFile}` - Uses the currently active file
+  - `--config jest.config.ts` - Specifies the Jest configuration file
+- **console**: `integratedTerminal` - Shows output in VS Code's integrated terminal
+
+With breakpoints set in your test or source files, you can step through the code and inspect variables during execution.
+
 ## Resources
 
 - 🎓 [Udemy Course](https://www.udemy.com/course/aws-typescript-cdk-serverless-react/?couponCode=MT260504G1)
